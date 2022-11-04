@@ -3,3 +3,16 @@ $color: steelblue;
 .my-flix {
   color: $color;
 }
+
+.movie-card {
+  cursor: pointer;
+  background-color: aqua;
+  display: flex;
+  width: fit-content;
+  margin: 10px;
+  padding: 10px;
+}
+
+.movie-card:hover {
+  background-color: greenyellow;
+}
