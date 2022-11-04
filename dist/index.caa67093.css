@@ -1,4 +1,17 @@
 .my-flix {
   color: steelblue;
 }
+
+.movie-card {
+  cursor: pointer;
+  background-color: aqua;
+  display: flex;
+  width: fit-content;
+  margin: 10px;
+  padding: 10px;
+}
+
+.movie-card:hover {
+  background-color: greenyellow;
+}
 /*# sourceMappingURL=index.caa67093.css.map */
