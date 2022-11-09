@@ -13,7 +13,7 @@ console.log(typeof(movie.image));
     return (
       <div className="movie-view">
         <div className="movie-poster">
-          <img src={movie.image} />
+          <img src={movie.image} crossOrigin= 'anonymous' />
         </div>
         <div className="movie-title">
           <span className="label">Title: </span>
