@@ -1,6 +1,11 @@
 import React from 'react';
+import {TMovie} from '../../@types'
 
-export class MovieView extends React.Component {
+interface IProps {
+  movie: TMovie;
+  onBackClick: (movie: TMovie | null) => void;
+}
+export class MovieView extends React.Component<IProps, {}> {
 
   render() {
     const { movie, onBackClick } = this.props;

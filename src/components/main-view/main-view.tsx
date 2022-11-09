@@ -4,11 +4,18 @@ import axios from 'axios';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
-// create a MainView class component, exporting it so that it can be used
+import {TMovie} from '../../@types'// create a MainView class component, exporting it so that it can be used
+import { type } from 'os';
 // by other components, modules, files
-export class MainView extends React.Component {
-  constructor() {
-    super();
+
+type TState = {
+  movies: TMovie[] | [];
+  selectedMovie: TMovie | null;
+  user: string | null
+}
+export class MainView extends React.Component<{}, TState> {
+  constructor(props:{}) {
+    super(props);
     this.state = {
       movies: [],
       selectedMovie: null,
@@ -28,13 +35,13 @@ export class MainView extends React.Component {
       });
   }
 // A function to change the state of selected movie
-  setSelectedMovie(newSelectedMovie) {
+  setSelectedMovie(newSelectedMovie:TMovie|null) {
     this.setState({
       selectedMovie: newSelectedMovie,
     });
   }
 
-  onLoggedIn(user) {
+  onLoggedIn(user:string|null) {
     this.setState({
       user
     });

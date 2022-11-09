@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import './login-view.scss';
-export function LoginView(props) {
+
+interface ButtonProps {
+  onLoggedIn: (username: string) => void;
+}
+// handleSubmit: (e: { preventDefault: () => void})=> void;
+export function LoginView(props: ButtonProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = function (e) {
+  const handleSubmit = function (e: { preventDefault: () => void }) {
     e.preventDefault();
     console.log(username, password);
     /* Send a request to the server for authentication */
@@ -17,7 +22,9 @@ export function LoginView(props) {
       <div className="container-login100">
         <div className="wrap-login100">
           <form className="login100-form validate-form">
-            <span className="login100-form-title p-b-26">Welcome</span>
+            <span className="login100-form-title p-b-26">
+              Welcome
+            </span>
             <span className="login100-form-title p-b-48">
               <i className="zmdi zmdi-font"></i>
             </span>
