@@ -1,0 +1,1 @@
+export type TMovie = {_id: number; Title:string; description: string; image:string}
