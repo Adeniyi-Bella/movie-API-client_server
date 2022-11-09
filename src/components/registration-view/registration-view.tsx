@@ -1,4 +1,4 @@
-import React, {useState,setState} from 'react';
+import React, {useState} from 'react';
 import './registration-view.scss'
 function RegistrationForm() {
     
@@ -56,7 +56,7 @@ function RegistrationForm() {
                     <input className="form__input" type="password" id="confirmPassword" value={confirmPassword} onChange = {(e) => handleInputChange(e)} placeholder="Confirm Password"/>
                 </div>
             </div>
-            <div class="footer">
+            <div className="footer">
                 <button onClick={()=>handleSubmit()} type="submit" class="btn">Register</button>
             </div>
         </div>

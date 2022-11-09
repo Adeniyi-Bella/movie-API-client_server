@@ -16,10 +16,15 @@
   },
   "homepage": "https://github.com/Adeniyi-Bella/movie-API-client_server#readme",
   "dependencies": {
+    "@types/jest": "^29.2.2",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
     "axios": "^1.1.3",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "typescript": "^4.8.4"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.0.0-rc.0"
