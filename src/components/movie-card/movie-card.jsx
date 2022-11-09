@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 export class MovieCard extends React.Component {
   render() {
-    const { movie, onMovieClick } = this.props;
+    const { movie } = this.props;
     console.log(movie.image);
     return (
       <div
         className="movie-card"
         onClick={() => {
-          onMovieClick(movie);
+          // onMovieClick(movie);
         }}
       >
         {movie.Title}

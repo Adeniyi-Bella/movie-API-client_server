@@ -29502,12 +29502,12 @@ var _propTypes = require("prop-types");
 var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
 class MovieCard extends _reactDefault.default.Component {
     render() {
-        const { movie , onMovieClick  } = this.props;
+        const { movie  } = this.props;
         console.log(movie.image);
         return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
             className: "movie-card",
             onClick: ()=>{
-                onMovieClick(movie);
+            // onMovieClick(movie);
             },
             __source: {
                 fileName: "src/components/movie-card/movie-card.jsx",
@@ -30421,7 +30421,7 @@ var _reactDefault = parcelHelpers.interopDefault(_react);
 class MovieView extends _reactDefault.default.Component {
     render() {
         const { movie , onBackClick  } = this.props;
-        console.log(typeof movie.image);
+        console.log(movie);
         return(/*#__PURE__*/ _jsxRuntime.jsxs("div", {
             className: "movie-view",
             __source: {
@@ -30439,6 +30439,7 @@ class MovieView extends _reactDefault.default.Component {
                     __self: this,
                     children: /*#__PURE__*/ _jsxRuntime.jsx("img", {
                         src: movie.image,
+                        crossOrigin: "anonymous",
                         __source: {
                             fileName: "src/components/movie-view/movie-view.jsx",
                             lineNumber: 11
