@@ -1,6 +1,8 @@
 // imports react into the file
 import React from 'react';
 import axios from 'axios';
+import { Row, Col } from 'react-bootstrap';
+// import Col from 'react-bootstrap/Col';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
@@ -12,22 +14,23 @@ export class MainView extends React.Component {
     this.state = {
       movies: [],
       selectedMovie: null,
-      user: null
+      user: null,
     };
   }
 
-  componentDidMount(){
-    axios.get('https://imbd-movies.herokuapp.com/movies')
-      .then(response => {
+  componentDidMount() {
+    axios
+      .get('https://imbd-movies.herokuapp.com/movies')
+      .then((response) => {
         this.setState({
-          movies: response.data
+          movies: response.data,
         });
       })
-      .catch(error => {
-        console.log(error); 
+      .catch((error) => {
+        console.log(error);
       });
   }
-// A function to change the state of selected movie
+  // A function to change the state of selected movie
   setSelectedMovie(newSelectedMovie) {
     this.setState({
       selectedMovie: newSelectedMovie,
@@ -36,41 +39,43 @@ export class MainView extends React.Component {
 
   onLoggedIn(user) {
     this.setState({
-      user
+      user,
     });
   }
-  // This render function is what returns the visual representation
-  // of the component, in other words, it renders what will be
-  // displayed on the screen.
+
   render() {
     const { movies, selectedMovie, user } = this.state;
 
-    if (!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)} />;
+    if (!user)
+      return (
+        <LoginView onLoggedIn={(user) => this.onLoggedIn(user)} />
+      );
 
-    if (movies.length === 0)
-      return <div className="main-view" />;
+    if (movies.length === 0) return <div className="main-view" />;
 
     return (
-      <div className="main-view">
+      <Row xs={1} md={2} className="justify-content-md-left">
         {selectedMovie ? (
-          <MovieView
-            movie={selectedMovie}
-            onBackClick={(newSelectedMovie) => {
-              this.setSelectedMovie(newSelectedMovie);
-            }}
-          />
+          <Col md={8}>
+            <MovieView
+              movie={selectedMovie}
+              onBackClick={(newSelectedMovie) => {
+                this.setSelectedMovie(newSelectedMovie);
+              }}
+            />
+          </Col>
         ) : (
           movies.map((movie) => (
             <MovieCard
               key={movie._id}
               movie={movie}
-              onMovieClick={(movie) => {
-                this.setSelectedMovie(movie);
+              onMovieClick={(newSelectedMovie) => {
+                this.setSelectedMovie(newSelectedMovie);
               }}
             />
           ))
         )}
-      </div>
+      </Row>
     );
   }
 }
