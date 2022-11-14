@@ -15,4 +15,5 @@ A front-end implementation for a movie app. The back-end implementation can be f
 
 
 ## Testing your project
-- Test your project using Parcel: parcel [Path to index.html]. Make sure to use the actual path to “index.html” instead of [Path to index.html] (relative to the current directory you’re inside).
+- Test your project using Parcel: parcel [Path to index.html] i.e parcel src/index.html.
+- The dist folder has all the components for the app.
