@@ -1,159 +1,286 @@
-import React, { useState, setState } from 'react';
+// import React from 'react';
 // import './registration-view.scss';
-import {
-  Form,
-  Button,
-  Nav,
-  Navbar,
-  NavDropdown,
-  Card,
-  CardGroup,
-  Container,
-  Col,
-  Row,
-} from 'react-bootstrap';
-function RegistrationForm() {
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [confirmPassword, setConfirmPassword] = useState(null);
+// import axios from 'axios';
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    if (id === 'firstName') {
-      setFirstName(value);
+// const Regex = RegExp(
+//   /^\s?[A-Z0–9]+[A-Z0–9._+-]{0,}@[A-Z0–9._+-]+\.[A-Z0–9]{2,4}\s?$/i
+// );
+// export class SignUp extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       username: '',
+//       email: '',
+//       password: '',
+//       errors: {
+//         username: '',
+//         email: '',
+//         password: '',
+//       },
+//     };
+//     // this.state = initialState;
+//     this.handleChange = this.handleChange.bind(this);
+//   }
+
+//   handleChange = (event) => {
+//     event.preventDefault();
+//     const { name, value } = event.target;
+//     this.setState({ name: value });
+//     console.log(name);
+//     let errors = this.state.errors;
+//     switch (name) {
+//       case 'username':
+//         errors.username =
+//           value.length < 5
+//             ? 'Username must be 5 characters long!'
+//             : '';
+//         break;
+//       case 'email':
+//         errors.email = Regex.test(value) ? '' : 'Email is not valid!';
+//         break;
+//       case 'password':
+//         errors.password =
+//           value.length < 8
+//             ? 'Password must be eight characters long!'
+//             : '';
+//         break;
+//       default:
+//         break;
+//     }
+//     this.setState(
+//       Object.assign(this.state, { errors, [name]: value })
+//     );
+//     console.log(this.state.errors);
+//   };
+//   handleSubmit = (event) => {
+//     event.preventDefault();
+//     const { email } = this.state;
+//     console.log(email);
+//     let validity = true;
+//     if (!email){validity= false}
+//     Object.values(this.state.errors).forEach(
+//       (val) => val.length > 0 && (validity = false)
+//     );
+//     if (validity == true) {
+//       componentDidMount() {
+//         const { username, email, password } = this.state;
+//       axios.post("https://imbd-movies.herokuapp.com/users", {
+
+//         Username: username,
+//         Password: password,
+//         Email: email,
+//       })
+//       .then((response) => {
+//         const data = response.data;
+//         console.log(data);
+//         window.open("/", "_self"); // the second argument '_self' is necessary so that the page will open in the current tab
+//       })
+//       .catch((e) => {
+//         console.log("error registering the user");
+//       });}
+//     // / console.log(this.initialState.username);
+//       // console.log('Registering can be done');
+//     } else {
+//       console.log('You cannot be registered!!!');
+//     }
+//   };
+
+//   render() {
+//     const { errors } = this.state;
+//     return (
+//       <div className="wrapper">
+//         <div className="form-wrapper">
+//           <h2>Sign Up</h2>
+//           <form onSubmit={this.handleSubmit} noValidate>
+//             <div className="fullName">
+//               <label htmlFor="fullName">Full Name</label>
+//               <input
+//                 type="text"
+//                 name="fullName"
+//                 onChange={this.handleChange}
+//                 required
+//               />
+//               {errors.username.length > 0 && (
+//                 <span style={{ color: 'red' }}>
+//                   {errors.username}
+//                 </span>
+//               )}
+//             </div>
+//             <div className="email">
+//               <label htmlFor="email">Email</label>
+//               <input
+//                 type="email"
+//                 name="email"
+//                 onChange={this.handleChange
+//                 }
+//               />
+//               {errors.email.length > 0 && (
+//                 <span style={{ color: 'red' }}>{errors.email}</span>
+//               )}
+//             </div>
+//             <div className="password">
+//               <label htmlFor="password">Password</label>
+//               <input
+//                 type="password"
+//                 name="password"
+//                 onChange={this.handleChange}
+//               />
+//               {errors.password.length > 0 && (
+//                 <span style={{ color: 'red' }}>
+//                   {errors.password}
+//                 </span>
+//               )}
+//             </div>
+//             <div className="submit">
+//               <button>Register Me</button>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+import React, { useState } from 'react';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import { Form, Button, Card } from 'react-bootstrap';
+
+import './registration-view.scss';
+export function RegistrationView(props) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthday, setBirthday] = useState('');
+  // Declare hook for each input
+  const [usernameErr, setUsernameErr] = useState('');
+  const [passwordErr, setPasswordErr] = useState('');
+  const [emailErr, setEmailErr] = useState('');
+  const [birthdayErr, setBirthdayErr] = useState('');
+
+  // Validate user inputs
+  const validate = () => {
+    let isReq = true;
+    if (!username) {
+      setUsernameErr('Username required');
+      isReq = false;
+    } else if (username.length < 5) {
+      setUsernameErr('Username must be 5 or more characters');
+      isReq = false;
     }
-    if (id === 'lastName') {
-      setLastName(value);
+    if (!password) {
+      setPasswordErr('Password required');
+      isReq = false;
+    } else if (password.length < 6) {
+      setPasswordErr('Password must be 6 or more characters');
+      isReq = false;
     }
-    if (id === 'email') {
-      setEmail(value);
+    if (!email) {
+      setEmailErr('Email required');
+      isReq = false;
+    } else if (email.indexOf('@') === -1) {
+      setEmailErr('Email must be a valid email address');
+      isReq = false;
     }
-    if (id === 'password') {
-      setPassword(value);
-    }
-    if (id === 'confirmPassword') {
-      setConfirmPassword(value);
-    }
+
+    return isReq;
   };
 
-  const handleSubmit = () => {
-    console.log(
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword
-    );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isReq = validate();
+    if (isReq) {
+      axios.post('https://imbd-movies.herokuapp.com/users', {
+          Username: username,
+          Password: password,
+          Email: email
+        
+        })
+        .then((res) => {
+          const data = res.data;
+          console.log(data);
+          alert('Registration successful! Please login.');
+          window.open('/', '_self');
+        })
+        .catch((e) => {
+          console.error(e);
+          alert('Unable to register :(');
+        });
+    }
   };
 
   return (
-    <div>
-      <Navbar bg="light" variant="light" expand="lg">
-        {/* <Container> */}
-        <Navbar.Brand href="#home">My-Movie APP</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">
-                Action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">
-                Something
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-        {/* </Container> */}
-      </Navbar>
-      <Container
-        style={{
-          maxWidth: '500px',
-          minWidth: '300px',
-          marginTop: '200px',
-        }}
-      >
-        <Row>
-          <Col>
-            <CardGroup>
-              <Card>
-                <Card.Body>
-                  <Card.Title> Welcome to the Login Page</Card.Title>
-                  <Form>
-                    <Form.Group controlId="formUsername">
-                      <Form.Label>Username:</Form.Label>
-                      <Form.Control
-                        type="text"
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        placeholder="Enter a user name"
-                      />
-                    </Form.Group>
-
-                    <Form.Group controlId="formPassword">
-                      <Form.Label>Password:</Form.Label>
-                      <Form.Control
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength="8"
-                        placeholder="Enter a password"
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      onClick={handleSubmit}
-                    >
-                      Submit
-                    </Button>
-                  </Form>
-                </Card.Body>
-              </Card>
-            </CardGroup>
-          </Col>
-        </Row>
-      </Container>
-    </div>
-    // <div className="form">
-    //     <div className="form-body">
-    //         <div className="username">
-    //             <label className="form__label" for="firstName">First Name </label>
-    //             <input className="form__input" type="text" value={firstName} onChange = {(e) => handleInputChange(e)} id="firstName" placeholder="First Name"/>
-    //         </div>
-    //         <div className="lastname">
-    //             <label className="form__label" for="lastName">Last Name </label>
-    //             <input  type="text" name="" id="lastName" value={lastName}  className="form__input" onChange = {(e) => handleInputChange(e)} placeholder="LastName"/>
-    //         </div>
-    //         <div className="email">
-    //             <label className="form__label" for="email">Email </label>
-    //             <input  type="email" id="email" className="form__input" value={email} onChange = {(e) => handleInputChange(e)} placeholder="Email"/>
-    //         </div>
-    //         <div className="password">
-    //             <label className="form__label" for="password">Password </label>
-    //             <input className="form__input" type="password"  id="password" value={password} onChange = {(e) => handleInputChange(e)} placeholder="Password"/>
-    //         </div>
-    //         <div className="confirm-password">
-    //             <label className="form__label" for="confirmPassword">Confirm Password </label>
-    //             <input className="form__input" type="password" id="confirmPassword" value={confirmPassword} onChange = {(e) => handleInputChange(e)} placeholder="Confirm Password"/>
-    //         </div>
-    //     </div>
-    //     <div class="footer">
-    //         <button onClick={()=>handleSubmit()} type="submit" class="btn">Register</button>
-    //     </div>
-    // </div>
+    <Card bg="dark" text="light" className="registration-card">
+      <Card.Header className="text-center" as="h5">
+        Register
+      </Card.Header>
+      <Card.Body>
+        <Form>
+          <Form.Group
+            className="registration-form-group-username"
+            controlId="formGroupUsername"
+          >
+            <Form.Label>Username:</Form.Label>
+            <Form.Control
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
+              required
+            />
+            {usernameErr && <p>{usernameErr}</p>}
+          </Form.Group>
+          <Form.Group
+            className="registration-form-group-password"
+            controlId="formGroupPassword"
+          >
+            <Form.Label>Password:</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Your password must be 6 or more characters"
+              minLength="6"
+              required
+            />
+            {passwordErr && <p>{passwordErr}</p>}
+          </Form.Group>
+          <Form.Group
+            className="registration-form-group-email"
+            controlId="formGroupEmail"
+          >
+            <Form.Label>Email:</Form.Label>
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              required
+            />
+            {emailErr && <p>{emailErr}</p>}
+          </Form.Group>
+          <Form.Group controlId="formGroupBirthday">
+            <Form.Label>Date of birth:</Form.Label>
+            <Form.Control
+              type="date"
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
+              placeholder="Enter your birthday"
+            />
+            {birthdayErr && <p>{birthdayErr}</p>}
+          </Form.Group>
+          <Button
+            className="button-registration-view"
+            variant="secondary"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 }
 
-export default RegistrationForm;
+RegistrationView.propTypes = {};
