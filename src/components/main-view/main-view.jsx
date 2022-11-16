@@ -14,6 +14,7 @@ import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { RegistrationView } from '../registration-view/registration-view.jsx';
 import NavBar from '../navbar/navbar';
+import FavmovieView from '../favoriteMovieView/favoriteMovieView';
 import ProfileView from '../profile-view/profile-view';
 // create a MainView class component, exporting it so that it can be used
 // by other components, modules, files
@@ -24,6 +25,7 @@ export class MainView extends React.Component {
       movies: [],
       // selectedMovie: null,
       user: null,
+      // favMovies: []
     };
   }
 
@@ -34,6 +36,7 @@ export class MainView extends React.Component {
         user: localStorage.getItem('user'),
       });
       this.getMovies(accessToken);
+      // this.getFavorite(user)
     }
   }
 
@@ -71,6 +74,23 @@ export class MainView extends React.Component {
       });
   }
 
+  // getFavorite(user) {
+  //   axios
+  //     .get(`https://imbd-movies.herokuapp.com/users/${user}/favoriteMovies`, {
+  //       // headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then((response) => {
+  //       // Assign the result to the state
+  //       const result = response.data.FavoriteMovies
+  //       this.setState({
+  //         favMovies: result,
+  //       });
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }
+
   addFavorite(movieId) {
     let { user, favoriteMovies } = this.props;
     const token = localStorage.getItem('token');
@@ -80,7 +100,7 @@ export class MainView extends React.Component {
       // this.props.addFavorite(movieId);
       axios
         .post(
-          `https://mats-js-myflixdb.herokuapp.com/users/${user}/movies/${movieId}`,
+          `https://imbd-movies.herokuapp.com/users/${user}/movies/${movieId}`,
           {},
           {
             headers: {
@@ -98,11 +118,6 @@ export class MainView extends React.Component {
   }
   render() {
     const { movies, user } = this.state;
-    // if (!user)
-    //   return (
-    //     <SignUp />
-    //   );
-
     return (
       <Router>
         <Route
@@ -171,39 +186,35 @@ export class MainView extends React.Component {
           }}
         />
         <Route
-          path={`/users/${user}`}
+          path={`/users/${user}/favoriteMovies`}
+          // path={`/users/${user}`}
           render={({ history }) => {
-            /* If there is no user, the LoginView is rendered. If there is a user logged in, 
-       the user details are passed as a prop to the LoginView */
-            // if (!user)
-            //   return (
-            //     <Col>
-            //       <LoginView
-            //         movies={movies}
-            //         onLoggedIn={(user) => this.onLoggedIn(user)}
-            //       />
-            //     </Col>
-            //   );
-            // // Before the movies have been loaded
-            // if (movies.length === 0)
-            //   return <div className="main-view" />;
-
             if (!user) return <Redirect to="/" />;
             return (
               <Col>
-                <ProfileView
-                  // movies={movies}
-                  // favoriteMovies={favoriteMovies.map((movieId) => {
-                  //   return movies.find((m) => m._id === movieId);
-                  // })}
-                  user={user}
-                  // removeFavorite={this.removeFavorite.bind(this)}
+                <FavmovieView
+                  movie={movies}
                   onBackClick={() => history.goBack()}
                 />
               </Col>
             );
           }}
         />
+        <Route
+          path={`/users/${user}`}
+          render={({ history }) => {
+            if (!user) return <Redirect to="/" />;
+            return (
+              <Col>
+                <ProfileView
+                  user={user}
+                  onBackClick={() => history.goBack()}
+                />
+              </Col>
+            );
+          }}
+        />
+
         {/* </Routes> */}
       </Router>
     );

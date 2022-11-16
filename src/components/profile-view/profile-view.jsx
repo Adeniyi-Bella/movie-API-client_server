@@ -64,7 +64,7 @@ export default function ProfileView(props) {
     if (isReq && token !== null && user !== null) {
       axios
         .put(
-          `https://mats-js-myflixdb.herokuapp.com/users/${user}`,
+          `https://imbd-movies.herokuapp.com/users/${user}`,
 
           {
             Username: username,

@@ -40,7 +40,7 @@ export default function NavBar({ user }) {
               </Nav.Link>
             )}
             {isAuth() && (
-              <Nav.Link as={Link} to={`/users/${user}`}>
+              <Nav.Link as={Link} to={`/users/${user}/favoriteMovies`}>
                 FAVORITE MOVIES
               </Nav.Link>
             )}

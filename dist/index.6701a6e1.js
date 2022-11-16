@@ -25272,6 +25272,8 @@ var _loginView = require("../login-view/login-view");
 var _registrationViewJsx = require("../registration-view/registration-view.jsx");
 var _navbar = require("../navbar/navbar");
 var _navbarDefault = parcelHelpers.interopDefault(_navbar);
+var _favoriteMovieView = require("../favoriteMovieView/favoriteMovieView");
+var _favoriteMovieViewDefault = parcelHelpers.interopDefault(_favoriteMovieView);
 var _profileView = require("../profile-view/profile-view");
 var _profileViewDefault = parcelHelpers.interopDefault(_profileView);
 class MainView extends _reactDefault.default.Component {
@@ -25290,6 +25292,7 @@ class MainView extends _reactDefault.default.Component {
                 user: localStorage.getItem('user')
             });
             this.getMovies(accessToken);
+        // this.getFavorite(user)
         }
     }
     onLoggedIn(authData) {
@@ -25322,13 +25325,29 @@ class MainView extends _reactDefault.default.Component {
             console.log(error);
         });
     }
+    // getFavorite(user) {
+    //   axios
+    //     .get(`https://imbd-movies.herokuapp.com/users/${user}/favoriteMovies`, {
+    //       // headers: { Authorization: `Bearer ${token}` },
+    //     })
+    //     .then((response) => {
+    //       // Assign the result to the state
+    //       const result = response.data.FavoriteMovies
+    //       this.setState({
+    //         favMovies: result,
+    //       });
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // }
     addFavorite(movieId) {
         let { user , favoriteMovies  } = this.props;
         const token = localStorage.getItem('token');
         if (favoriteMovies.some((favId)=>favId === movieId
         )) console.log('Movie already added to favorites!');
         else if (token !== null && user !== null) // this.props.addFavorite(movieId);
-        _axiosDefault.default.post(`https://mats-js-myflixdb.herokuapp.com/users/${user}/movies/${movieId}`, {
+        _axiosDefault.default.post(`https://imbd-movies.herokuapp.com/users/${user}/movies/${movieId}`, {
         }, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -25342,14 +25361,10 @@ class MainView extends _reactDefault.default.Component {
     }
     render() {
         const { movies , user  } = this.state;
-        // if (!user)
-        //   return (
-        //     <SignUp />
-        //   );
         return(/*#__PURE__*/ _jsxRuntime.jsxs(_reactRouterDom.BrowserRouter, {
             __source: {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 107
+                lineNumber: 122
             },
             __self: this,
             children: [
@@ -25383,7 +25398,7 @@ class MainView extends _reactDefault.default.Component {
                     },
                     __source: {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 108
+                        lineNumber: 123
                     },
                     __self: this
                 }),
@@ -25400,7 +25415,7 @@ class MainView extends _reactDefault.default.Component {
                     },
                     __source: {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 137
+                        lineNumber: 152
                     },
                     __self: this
                 }),
@@ -25426,44 +25441,46 @@ class MainView extends _reactDefault.default.Component {
                     },
                     __source: {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 148
+                        lineNumber: 163
                     },
                     __self: this
                 }),
                 /*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.Route, {
-                    path: `/users/${user}`,
+                    path: `/users/${user}/favoriteMovies`,
+                    // path={`/users/${user}`}
                     render: ({ history  })=>{
-                        /* If there is no user, the LoginView is rendered. If there is a user logged in, 
-       the user details are passed as a prop to the LoginView */ // if (!user)
-                        //   return (
-                        //     <Col>
-                        //       <LoginView
-                        //         movies={movies}
-                        //         onLoggedIn={(user) => this.onLoggedIn(user)}
-                        //       />
-                        //     </Col>
-                        //   );
-                        // // Before the movies have been loaded
-                        // if (movies.length === 0)
-                        //   return <div className="main-view" />;
                         if (!user) return(/*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.Redirect, {
                             to: "/"
                         }));
                         return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
-                            children: /*#__PURE__*/ _jsxRuntime.jsx(_profileViewDefault.default, {
-                                // movies={movies}
-                                // favoriteMovies={favoriteMovies.map((movieId) => {
-                                //   return movies.find((m) => m._id === movieId);
-                                // })}
-                                user: user,
-                                // removeFavorite={this.removeFavorite.bind(this)}
+                            children: /*#__PURE__*/ _jsxRuntime.jsx(_favoriteMovieViewDefault.default, {
+                                movie: movies,
                                 onBackClick: ()=>history.goBack()
                             })
                         }));
                     },
                     __source: {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 173
+                        lineNumber: 188
+                    },
+                    __self: this
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.Route, {
+                    path: `/users/${user}`,
+                    render: ({ history  })=>{
+                        if (!user) return(/*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.Redirect, {
+                            to: "/"
+                        }));
+                        return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Col, {
+                            children: /*#__PURE__*/ _jsxRuntime.jsx(_profileViewDefault.default, {
+                                user: user,
+                                onBackClick: ()=>history.goBack()
+                            })
+                        }));
+                    },
+                    __source: {
+                        fileName: "src/components/main-view/main-view.jsx",
+                        lineNumber: 203
                     },
                     __self: this
                 })
@@ -25477,7 +25494,7 @@ class MainView extends _reactDefault.default.Component {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-runtime":"8xIwr","react":"6TuXu","axios":"iYoWk","../movie-card/movie-card":"6EiBJ","../movie-view/movie-view":"ikZdr","../login-view/login-view":"054li","@parcel/transformer-js/src/esmodule-helpers.js":"jP9kc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"8C7q0","react-bootstrap":"h2YVd","../registration-view/registration-view.jsx":"aP2YV","react-router-dom":"cpyQW","../navbar/navbar":"63yS7","../profile-view/profile-view":"2E7Aw"}],"iYoWk":[function(require,module,exports) {
+},{"react/jsx-runtime":"8xIwr","react":"6TuXu","axios":"iYoWk","../movie-card/movie-card":"6EiBJ","../movie-view/movie-view":"ikZdr","../login-view/login-view":"054li","@parcel/transformer-js/src/esmodule-helpers.js":"jP9kc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"8C7q0","react-bootstrap":"h2YVd","../registration-view/registration-view.jsx":"aP2YV","react-router-dom":"cpyQW","../navbar/navbar":"63yS7","../profile-view/profile-view":"2E7Aw","../favoriteMovieView/favoriteMovieView":"aVcpf"}],"iYoWk":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Axios", ()=>Axios
@@ -46239,7 +46256,7 @@ function NavBar({ user  }) {
                             }),
                             isAuth() && /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Nav.Link, {
                                 as: _reactRouterDom.Link,
-                                to: `/users/${user}`,
+                                to: `/users/${user}/favoriteMovies`,
                                 __source: {
                                     fileName: "src/components/navbar/navbar.jsx",
                                     lineNumber: 43
@@ -46344,7 +46361,7 @@ function ProfileView(props) {
         e.preventDefault();
         const isReq = validate();
         const token = localStorage.getItem('token');
-        if (isReq && token !== null && user !== null) _axiosDefault.default.put(`https://mats-js-myflixdb.herokuapp.com/users/${user}`, {
+        if (isReq && token !== null && user !== null) _axiosDefault.default.put(`https://imbd-movies.herokuapp.com/users/${user}`, {
             Username: username,
             Password: password,
             Email: email,
@@ -46835,7 +46852,105 @@ $RefreshReg$(_c, "ProfileView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-runtime":"8xIwr","react":"6TuXu","axios":"iYoWk","prop-types":"1tgq3","react-bootstrap":"h2YVd","react-router-dom":"cpyQW","./profile-view.scss":"gb0ga","@parcel/transformer-js/src/esmodule-helpers.js":"jP9kc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"8C7q0"}],"gb0ga":[function() {},{}],"jdzvJ":[function(require,module,exports) {
+},{"react/jsx-runtime":"8xIwr","react":"6TuXu","axios":"iYoWk","prop-types":"1tgq3","react-bootstrap":"h2YVd","react-router-dom":"cpyQW","./profile-view.scss":"gb0ga","@parcel/transformer-js/src/esmodule-helpers.js":"jP9kc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"8C7q0"}],"gb0ga":[function() {},{}],"aVcpf":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$2735 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$2735.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "FavmovieView", ()=>FavmovieView
+) //       <Card border="light" body style={{}}>
+ //         <Card.Body>
+ //           <Card.Img
+ //             style={{ width: '18rem', margin: 'auto' }}
+ //             className="justify-content-md-centre"
+ //             variant="top"
+ //             src={movie.image}
+ //             crossOrigin="anonymous"
+ //           />
+ //           <Card.Title style={{ padding:  '10px 0'}}>
+ //             <span className="label">Title: </span>
+ //             <span className="value">{movie.Title}</span>
+ //           </Card.Title>
+ //           <Card.Text>
+ //             <span className="label">Actor/s: </span>
+ //             <span className="value">{`${name}`}</span>
+ //           </Card.Text>
+ //           <Card.Text>
+ //             <span className="label">Release year/Rating/ Popularity: </span>
+ //             <span className="value">{`${movie.release_year}/${movie.rating}/${movie.popularity}`}</span>
+ //           </Card.Text>
+ //           <Card.Text>
+ //             <span className="label">Description: </span>
+ //             <span className="value">{movie.description || null}</span>
+ //           </Card.Text>
+ //           <Card.Text>
+ //             <span className="label">Director/s: </span>
+ //             <span className="value">{`${movie.director_names}`}</span>
+ //           </Card.Text>
+ //           <Card.Text>
+ //             <span className="label">Genre/s: </span>
+ //             <span className="value">{`${movie.genres}`}</span>
+ //           </Card.Text>
+ //           <Card.Text>
+ //             <span className="label">Language/s: </span>
+ //             <span className="value">{`${movie.languages}`}</span>
+ //           </Card.Text>
+ //           {/* <Button
+ //             className="button-movie-view-add-favorite"
+ //             variant="outline-warning"
+ //             size="sm"
+ //             type="button"
+ //             onClick={() => addFavorite(movie._id)}
+ //           >
+ //             Add to favorites
+ //           </Button> */}
+ //           {/*
+ //           <Link to={`/genres/${movie.Genre.Name}`}>
+ //             <Button variant="link">Genre</Button>
+ //           </Link> */}
+ //           <Button
+ //             onClick={() => {
+ //               onBackClick(null);
+ //             }}
+ //           >
+ //             Back
+ //           </Button>
+ //         </Card.Body>
+ //       </Card>
+ //     );
+;
+var _jsxRuntime = require("react/jsx-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _reactBootstrap = require("react-bootstrap");
+var _reactRouterDom = require("react-router-dom");
+class FavmovieView extends _reactDefault.default.Component {
+    render() {
+        const { movie , onBackClick , user  } = this.props;
+        console.log(movie);
+        return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Card.Header, {
+            className: "text-center",
+            as: "h5",
+            __source: {
+                fileName: "src/components/favoriteMovieView/favoriteMovieView.jsx",
+                lineNumber: 11
+            },
+            __self: this,
+            children: "Profile"
+        }));
+    }
+}
+
+  $parcel$ReactRefreshHelpers$2735.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-runtime":"8xIwr","react":"6TuXu","react-bootstrap":"h2YVd","react-router-dom":"cpyQW","@parcel/transformer-js/src/esmodule-helpers.js":"jP9kc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"8C7q0"}],"jdzvJ":[function(require,module,exports) {
 'use strict';
 var m = require('react-dom');
 var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
