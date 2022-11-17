@@ -1,76 +1,99 @@
-import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Row, Button, Figure, Col, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export class FavmovieView extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      // movie: [],
+      FavoriteMovies: [],
+    };
+  }
 
+  componentDidMount() {
+    const accessToken = localStorage.getItem('token');
+    this.getUser(accessToken);
+  }
+
+  getUser = (token) => {
+    const Username = localStorage.getItem('user');
+    axios
+      .get(`https://imbd-movies.herokuapp.com/users/${Username}`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        // Assign the result to the state
+        this.setState({
+          FavoriteMovies: response.data.FavoriteMovies,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  onRemoveFavorite = (movieId) => {
+    const username = localStorage.getItem('user');
+    console.log(username);
+    console.log(movieId);
+    axios
+      .delete(
+        `https://imbd-movies.herokuapp.com/users/${username}/movies/${movieId}`,
+        {
+          // headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        // Assign the result to the state
+        window.location.reload(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   render() {
-    const { movie, onBackClick,user } = this.props;
-    console.log(movie);
-    return (
-      <Card.Header className="text-center" as="h5">
-      Profile
-    </Card.Header>
-    );
-  }}
-//       <Card border="light" body style={{}}>
-//         <Card.Body>
-//           <Card.Img
-//             style={{ width: '18rem', margin: 'auto' }}
-//             className="justify-content-md-centre"
-//             variant="top"
-//             src={movie.image}
-//             crossOrigin="anonymous"
-//           />
-//           <Card.Title style={{ padding:  '10px 0'}}>
-//             <span className="label">Title: </span>
-//             <span className="value">{movie.Title}</span>
-//           </Card.Title>
-//           <Card.Text>
-//             <span className="label">Actor/s: </span>
-//             <span className="value">{`${name}`}</span>
-//           </Card.Text>
-//           <Card.Text>
-//             <span className="label">Release year/Rating/ Popularity: </span>
-//             <span className="value">{`${movie.release_year}/${movie.rating}/${movie.popularity}`}</span>
-//           </Card.Text>
-//           <Card.Text>
-//             <span className="label">Description: </span>
-//             <span className="value">{movie.description || null}</span>
-//           </Card.Text>
-//           <Card.Text>
-//             <span className="label">Director/s: </span>
-//             <span className="value">{`${movie.director_names}`}</span>
-//           </Card.Text>
-//           <Card.Text>
-//             <span className="label">Genre/s: </span>
-//             <span className="value">{`${movie.genres}`}</span>
-//           </Card.Text>
-//           <Card.Text>
-//             <span className="label">Language/s: </span>
-//             <span className="value">{`${movie.languages}`}</span>
-//           </Card.Text>
-//           {/* <Button
-//             className="button-movie-view-add-favorite"
-//             variant="outline-warning"
-//             size="sm"
-//             type="button"
-//             onClick={() => addFavorite(movie._id)}
-//           >
-//             Add to favorites
-//           </Button> */}
-//           {/*
-//           <Link to={`/genres/${movie.Genre.Name}`}>
-//             <Button variant="link">Genre</Button>
-//           </Link> */}
-//           <Button
-//             onClick={() => {
-//               onBackClick(null);
-//             }}
-//           >
-//             Back
-//           </Button>
-//         </Card.Body>
-//       </Card>
-//     );
+    const { movies } = this.props;
+    const { FavoriteMovies } = this.state;
 
+    const myFavoritesMovies = [];
+    for (let index = 0; index < movies.length; index++) {
+      const movie = movies[index];
+      if (FavoriteMovies.includes(movie._id)) {
+        myFavoritesMovies.push(movie);
+      }
+    }
+
+    console.log(myFavoritesMovies.length);
+    if (myFavoritesMovies.length===0)
+    {return (<h4 style={{ paddingLeft: '30px' }}> No movies in Favorite. Go back to add Movies</h4>)}
+    return (
+      <>
+        {myFavoritesMovies.map((movie) => (
+          <Card border="light" body style={{ width: '18rem' }}>
+            <Card.Body key={movie._id}>
+              <>
+                <Card.Img
+                  variant="top"
+                  src={movie.image}
+                  crossOrigin="anonymous"
+                />
+
+                <Card.Title>{movie.Title}</Card.Title>
+                <Button
+                  className="remove"
+                  variant="secondary"
+                  onClick={() => {
+                    this.onRemoveFavorite(movie._id);
+                  }}
+                >
+                  Remove from the list
+                </Button>
+              </>
+            </Card.Body>
+          </Card>
+        ))}
+      </>
+    );
+  }
+}
