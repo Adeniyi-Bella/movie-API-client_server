@@ -1,16 +1,36 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export class MovieView extends React.Component {
-
+  addFavorite = (movieId) => {
+    const username = localStorage.getItem('user');
+    console.log(username);
+    console.log(movieId);
+    axios
+      .post(
+        `https://imbd-movies.herokuapp.com/users/${username}/movies/${movieId}`,
+        {
+          // headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        // Assign the result to the state
+        alert('Movie succesfully added to favorites list')
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   render() {
-    const { movie, onBackClick, addFavorite } = this.props;
-    console.log(movie);
-    const name = []
-    movie.actors.forEach(element => {
-      name.push(element.name)
+    const { movie, onBackClick, user } = this.props;
+    // console.log(movie);
+    const name = [];
+    movie.actors.forEach((element) => {
+      name.push(element.name);
     });
+
     // console.log(name);
     return (
       <Card border="light" body style={{}}>
@@ -22,7 +42,7 @@ export class MovieView extends React.Component {
             src={movie.image}
             crossOrigin="anonymous"
           />
-          <Card.Title style={{ padding:  '10px 0'}}>
+          <Card.Title style={{ padding: '10px 0' }}>
             <span className="label">Title: </span>
             <span className="value">{movie.Title}</span>
           </Card.Title>
@@ -31,7 +51,9 @@ export class MovieView extends React.Component {
             <span className="value">{`${name}`}</span>
           </Card.Text>
           <Card.Text>
-            <span className="label">Release year/Rating/ Popularity: </span>
+            <span className="label">
+              Release year/Rating/ Popularity:{' '}
+            </span>
             <span className="value">{`${movie.release_year}/${movie.rating}/${movie.popularity}`}</span>
           </Card.Text>
           <Card.Text>
@@ -51,33 +73,23 @@ export class MovieView extends React.Component {
             <span className="value">{`${movie.languages}`}</span>
           </Card.Text>
           <Button
-            className="button-movie-view-add-favorite"
-            variant="outline-warning"
-            size="sm"
-            type="button"
-            onClick={() => addFavorite(movie._id)}
+            style={{ marginRight: '10px' }}
+            onClick={() => {
+              this.addFavorite(movie._id);
+            }}
           >
             Add to favorites
           </Button>
-          {/*
-          <Link to={`/genres/${movie.Genre.Name}`}>
-            <Button variant="link">Genre</Button>
-          </Link> */}
           <Button
             onClick={() => {
               onBackClick(null);
             }}
           >
-            Back
+            Back To Home
           </Button>
         </Card.Body>
       </Card>
     );
   }
 
-  // componentDidMount() {
-  //   document.addEventListener('keypress', event => {
-  //     console.log(event.key);
-  //   });
-  // }
 }

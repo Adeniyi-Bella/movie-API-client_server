@@ -38,8 +38,6 @@ export function LoginView(props) {
     e.preventDefault();
     const isReq = validate();
     if(isReq) {
-    console.log(username);
-    console.log(password);
     /* Send a request to the server for authentication */
     axios.post('https://imbd-movies.herokuapp.com/login', {
       
@@ -50,6 +48,7 @@ export function LoginView(props) {
     .then(response => {
       console.log(25);
       const data = response.data;
+      console.log(data);
       props.onLoggedIn(data);
     })
     .catch(e => {
@@ -58,6 +57,7 @@ export function LoginView(props) {
   }
   };
 
+  
   return (
     <>
     <Navbar bg="light" variant="light" expand="lg" sticky="top">
@@ -92,7 +92,7 @@ export function LoginView(props) {
       <div className="container-login100">
         <div className="wrap-login100">
           <form className="login100-form validate-form">
-            <span className="login100-form-title p-b-26">Welcome</span>
+            <span className="login100-form-title p-b-26">Log in</span>
             <span className="login100-form-title p-b-48">
               <i className="zmdi zmdi-font"></i>
             </span>

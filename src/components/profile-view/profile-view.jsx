@@ -18,16 +18,21 @@ import { Link } from 'react-router-dom';
 
 import './profile-view.scss';
 export default function ProfileView(props) {
-  const [username, setUsername] = useState(props.user);
+  const [username, setUsername] = useState('');
+  const [currentEmail, setnewEmail] = useState('');
+  const [currentname, setCurrentname] = useState('');
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState(props.email);
-  const [birthday, setBirthday] = useState(props.birthday);
+  const [email, setEmail] = useState('');
+  const [birthday, setBirthday] = useState('');
   // Declare hook for each input
   const [usernameErr, setUsernameErr] = useState('');
   const [passwordErr, setPasswordErr] = useState('');
   const [emailErr, setEmailErr] = useState('');
   const [birthdayErr, setBirthdayErr] = useState('');
-  const { user, favoriteMovies, removeFavorite, onBackClick } = props;
+  // const { user, favoriteMovies, removeFavorite, onBackClick } = props;
+console.log(props.user);
+  // const Username = localStorage.getItem('user');
+
 
   // Validate user inputs
   const validate = () => {
@@ -61,6 +66,7 @@ export default function ProfileView(props) {
     e.preventDefault();
     const isReq = validate();
     const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
     if (isReq && token !== null && user !== null) {
       axios
         .put(
@@ -80,7 +86,7 @@ export default function ProfileView(props) {
         )
         .then((res) => {
           const data = res.data;
-          updateUser(data.Username);
+          console.log(data);
           localStorage.setItem('user', data.Username);
           alert(
             'Update successful! Your changes will be visible after the next login.'
@@ -98,12 +104,9 @@ export default function ProfileView(props) {
     const token = localStorage.getItem('token');
     if (confirm('Are you sure? This cannot be undone!')) {
       axios
-        .delete(
-          `https://mats-js-myflixdb.herokuapp.com/users/${user}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
+        .delete(`https://imbd-movies.herokuapp.com/users/${user}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => {
           alert(
             `Your account has been deleted. We're sorry to see you go!`
@@ -128,7 +131,12 @@ export default function ProfileView(props) {
               <span className="label headline-profile-update">
                 PROFILE DETAILS
               </span>
-              <Form style={{ width: '150px', justifyContent: 'space-between' }}>
+              <Form
+                style={{
+                  width: '150px',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <Form.Group
                   className="profile-form-group-username"
                   controlId="formGroupUsername"
@@ -136,9 +144,8 @@ export default function ProfileView(props) {
                   <Form.Label>Username:</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder={username}
+                    placeholder={currentname}
                   />
-                  
                 </Form.Group>
                 <Form.Group
                   className="profile-form-group-username"
@@ -147,20 +154,15 @@ export default function ProfileView(props) {
                   <Form.Label>Email:</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder={email}
+                    placeholder={currentEmail}
                   />
-                  
                 </Form.Group>
                 <Form.Group
                   className="profile-form-group-username"
                   controlId="formGroupUsername"
                 >
                   <Form.Label>Birthday:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={birthday}
-                  />
-                  
+                  <Form.Control type="text" placeholder={birthday} />
                 </Form.Group>
               </Form>
             </Card>
@@ -239,41 +241,6 @@ export default function ProfileView(props) {
               </span>
             </Card>
           </CardGroup>
-          {/* <CardGroup className="card-group-profile-mini-cards">
-            {favoriteMovies.map((m) => (
-              <Col
-                md={6}
-                lg={3}
-                key={m._id}
-                className="profile-movie-card-mini"
-              >
-                <Card className="h-100" bg="dark" text="light">
-                  <Link
-                    to={`/movies/${m._id}`}
-                    className="profile-movie-card-link"
-                  >
-                    <Card.Img
-                      variant="top"
-                      crossOrigin="anonymous | use-credentials"
-                      src={m.ImagePath}
-                    />
-                    <Card.Body>
-                      <Card.Title>{m.Title}</Card.Title>
-                    </Card.Body>
-                  </Link>
-                  <Button
-                    className="button-profile-view-remove-favorite"
-                    variant="outline-danger"
-                    size="sm"
-                    type="button"
-                    onClick={() => removeFavorite(m._id)}
-                  >
-                    Remove
-                  </Button>
-                </Card>
-              </Col>
-            ))}
-          </CardGroup> */}
         </Card.Body>
 
         <Card.Footer
@@ -292,13 +259,11 @@ export default function ProfileView(props) {
             </Col>
           </Card>
           <Button
-            className="button-profile-view-back"
-            variant="primary"
             onClick={() => {
-              onBackClick();
+              props.onBackClick(null);
             }}
           >
-            Back
+            Back To Home
           </Button>
         </Card.Footer>
       </Card>
@@ -306,20 +271,3 @@ export default function ProfileView(props) {
   );
 }
 
-// ProfileView.propTypes = {
-//   user: PropTypes.string.isRequired,
-//   favoriteMovies: PropTypes.array.isRequired,
-//   removeFavorite: PropTypes.func.isRequired,
-//   onBackClick: PropTypes.func.isRequired,
-// };
-
-// const mapStateToProps = (state) => {
-//   return {
-//     user: state.user,
-//   };
-// };
-
-// export default connect(mapStateToProps, {
-//   deleteUser,
-//   updateUser,
-// })(ProfileView);

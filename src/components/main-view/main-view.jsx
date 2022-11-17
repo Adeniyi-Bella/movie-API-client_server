@@ -14,7 +14,7 @@ import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { RegistrationView } from '../registration-view/registration-view.jsx';
 import NavBar from '../navbar/navbar';
-import FavmovieView from '../favoriteMovieView/favoriteMovieView';
+import {FavmovieView} from '../favoriteMovieView/favoriteMovieView';
 import ProfileView from '../profile-view/profile-view';
 // create a MainView class component, exporting it so that it can be used
 // by other components, modules, files
@@ -23,7 +23,8 @@ export class MainView extends React.Component {
     super();
     this.state = {
       movies: [],
-      // selectedMovie: null,
+      userDetails: {},
+      // favoriteMovies: [],
       user: null,
       // favMovies: []
     };
@@ -36,7 +37,7 @@ export class MainView extends React.Component {
         user: localStorage.getItem('user'),
       });
       this.getMovies(accessToken);
-      // this.getFavorite(user)
+      
     }
   }
 
@@ -45,10 +46,12 @@ export class MainView extends React.Component {
     this.setState({
       user: authData.user.Username,
     });
-
+    // this.getUser(user)
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
     this.getMovies(authData.token);
+    
+    // this.getUserDetails(user);
   }
 
   onLoggedOut() {
@@ -74,50 +77,24 @@ export class MainView extends React.Component {
       });
   }
 
-  // getFavorite(user) {
-  //   axios
-  //     .get(`https://imbd-movies.herokuapp.com/users/${user}/favoriteMovies`, {
-  //       // headers: { Authorization: `Bearer ${token}` },
-  //     })
-  //     .then((response) => {
-  //       // Assign the result to the state
-  //       const result = response.data.FavoriteMovies
-  //       this.setState({
-  //         favMovies: result,
-  //       });
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }
-
-  addFavorite(movieId) {
-    let { user, favoriteMovies } = this.props;
-    const token = localStorage.getItem('token');
-    if (favoriteMovies.some((favId) => favId === movieId)) {
-      console.log('Movie already added to favorites!');
-    } else if (token !== null && user !== null) {
-      // this.props.addFavorite(movieId);
-      axios
-        .post(
-          `https://imbd-movies.herokuapp.com/users/${user}/movies/${movieId}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then(() => {
-          console.log(`Movie successfully added to favorites!`);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    } else console.log('Something is wrong');
+  getUser(user){
+    axios
+    .get(`https://imbd-movies.herokuapp.com/users/${user}`, {
+      // headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      // Assign the result to the state
+      console.log(response.data);
+      this.setState({
+        userDetails: response.data,
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
   render() {
-    const { movies, user } = this.state;
+    const { movies, user} = this.state;
     return (
       <Router>
         <Route
@@ -149,13 +126,15 @@ export class MainView extends React.Component {
           }}
         />
 
-        <Route
+        <Route exact
           path="/register"
           render={() => {
             if (user) return <Redirect to="/" />;
             return (
               <Col>
-                <RegistrationView />
+                <RegistrationView 
+                onBackClick={() => history.goBack()}/>
+                
               </Col>
             );
           }}
@@ -180,27 +159,42 @@ export class MainView extends React.Component {
                     (m) => m._id === match.params.id
                   )}
                   onBackClick={() => history.goBack()}
+                  user={user}
                 />
               </Col>
             );
           }}
         />
         <Route
+          exact
           path={`/users/${user}/favoriteMovies`}
-          // path={`/users/${user}`}
           render={({ history }) => {
-            if (!user) return <Redirect to="/" />;
+            if (!user)
+              return (
+                <LoginView
+                  movies={movies}
+                  onLoggedIn={(user) => this.onLoggedIn(user)}
+                />
+              );
+
+            if (movies.length === 0)
+              return <div className="main-view" />;
             return (
-              <Col>
+              <>
+              <div style={{ fontSize: 'x-large',background: 'lightgrey', height: '50px', textAlign: 'center'}}> Favourites movie section</div>
+              <Row xs={1} md={2}>
                 <FavmovieView
-                  movie={movies}
+                  movies={movies}
+                  // user={user}
                   onBackClick={() => history.goBack()}
                 />
-              </Col>
+              </Row>
+              </>
             );
           }}
         />
         <Route
+          exact
           path={`/users/${user}`}
           render={({ history }) => {
             if (!user) return <Redirect to="/" />;
