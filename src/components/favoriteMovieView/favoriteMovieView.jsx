@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Button, Figure, Col, Card } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export class FavmovieView extends React.Component {
