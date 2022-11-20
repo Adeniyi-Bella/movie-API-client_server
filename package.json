@@ -1,6 +1,6 @@
 {
   "name": "movie-api-client_server",
-  "main": "src/index.html",
+  "default": "src/index.html",
   "version": "1.0.0",
   "description": "",
   "scripts": {
