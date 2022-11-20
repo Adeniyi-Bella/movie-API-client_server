@@ -1,15 +1,17 @@
 // imports react into the file
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
   Redirect,
 } from 'react-router-dom';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 // import Col from 'react-bootstrap/Col';
-import { MovieCard } from '../movie-card/movie-card';
+import { setMovies } from '../../actions/actions';
+import MoviesList from '../movies-list/movies-list';
+// import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { RegistrationView } from '../registration-view/registration-view.jsx';
@@ -18,12 +20,12 @@ import {FavmovieView} from '../favoriteMovieView/favoriteMovieView';
 import ProfileView from '../profile-view/profile-view';
 // create a MainView class component, exporting it so that it can be used
 // by other components, modules, files
-export class MainView extends React.Component {
+class MainView extends React.Component {
   constructor() {
     super();
     this.state = {
-      movies: [],
-      userDetails: {},
+      // movies: [],
+      // userDetails: {},
       // favoriteMovies: [],
       user: null,
       // favMovies: []
@@ -68,33 +70,18 @@ export class MainView extends React.Component {
       })
       .then((response) => {
         // Assign the result to the state
-        this.setState({
-          movies: response.data,
-        });
-      })
+        this.props.setMovies(response.data);
+        })
+      // })
       .catch(function (error) {
         console.log(error);
       });
   }
 
-  getUser(user){
-    axios
-    .get(`https://imbd-movies.herokuapp.com/users/${user}`, {
-      // headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((response) => {
-      // Assign the result to the state
-      console.log(response.data);
-      this.setState({
-        userDetails: response.data,
-      });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
   render() {
-    const { movies, user} = this.state;
+    // const { movies, user} = this.state;
+    let { movies } = this.props;
+    let { user } = this.state;
     return (
       <Router>
         <Route
@@ -116,11 +103,12 @@ export class MainView extends React.Component {
             return (
               <>
                 <NavBar user={user} />
-                <Row xs={1} md={2}>
-                  {movies.map((m) => (
-                    <MovieCard key={m._id} movie={m} />
-                  ))}
-                </Row>
+                 {/* <Row xs={1} md={2}> */}
+                  {/* {movies.map((m) => (  */}
+                  <MoviesList movies={movies}/>
+                    {/* <MovieCard key={m._id} movie={m} /> */}
+                  {/* ))} */}
+                {/* </Row> */}
               </>
             );
           }}
@@ -214,3 +202,10 @@ export class MainView extends React.Component {
     );
   }
 }
+
+let mapStateToProps = state => {
+  return { movies: state.movies }
+}
+
+// #8
+export default connect(mapStateToProps, { setMovies } )(MainView);
