@@ -17,4 +17,4 @@ A front-end implementation for a movie app. The back-end implementation can be f
 ## Testing your project
 - Clone the github link
 - Test your project using Parcel: parcel [Path to index.html] i.e parcel src/index.html.
-- The dist folder has all the components for the app.
+- The src folder has all the components for the app.
