@@ -14,7 +14,7 @@ function MoviesList(props) {
   console.log(visibilityFilter);
   let filteredMovies = movies;
 
-  if (visibilityFilter !== '') {
+  if (visibilityFilter !== '') { 
     console.log(18);
     filteredMovies = movies.filter((m) =>
       m.Title.toLowerCase().includes(visibilityFilter.toLowerCase())

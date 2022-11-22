@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Button, Row } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
 export class MovieCard extends React.Component {
   render() {
     const { movie } = this.props;
     console.log(movie._id);
 
     return (
-      // <Row xs={1} md={2}>
+      // <Row xs={1} md={2}> 
         <Card border="light" body style={{ width: '18rem' }}>
           <Card.Body>
             <Card.Img
@@ -41,3 +42,12 @@ MovieCard.propTypes = {
   }).isRequired,
   // onMovieClick: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = (state) => {
+  return {
+    movies: state.movies,
+    user: state.user
+  };
+};
+
+export default connect(mapStateToProps)(MovieCard);

@@ -8,6 +8,8 @@ import {
   Button
 
 } from 'react-bootstrap';
+
+import { connect } from 'react-redux';
 // import Button from 'react-bootstrap/Button';
 import './login-view.scss';
 export function LoginView(props) {
@@ -60,9 +62,9 @@ export function LoginView(props) {
   
   return (
     <>
-    <Navbar bg="light" variant="light" expand="lg" sticky="top">
+    {/* <Navbar bg="light" variant="light" expand="lg" sticky="top"> */}
         {/* <Container> */}
-        <Navbar.Brand href="#home">My-Movie APP</Navbar.Brand>
+        {/* <Navbar.Brand href="#home">My-Movie APP</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -84,9 +86,9 @@ export function LoginView(props) {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
-        </Navbar.Collapse>
+        </Navbar.Collapse> */}
         {/* </Container> */}
-      </Navbar>
+      {/* </Navbar> */}
 
     <div className="limiter">
       <div className="container-login100">
@@ -172,3 +174,10 @@ export function LoginView(props) {
     </>
   );
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  handleSubmit: (event) =>
+    dispatch(handleSubmit(event))
+});
+
+export default connect(null, mapDispatchToProps)(LoginView);
