@@ -18,8 +18,9 @@ import { Link } from 'react-router-dom';
 
 import './profile-view.scss';
 export default function ProfileView(props) {
-  const [username, setUsername] = useState('');
-  const [currentEmail, setnewEmail] = useState('');
+  console.log(props.user.Username);
+  const [username, setUsername] = useState(props.user.Username);
+  const [currentEmail, setnewEmail] = useState(props.user.Email);
   const [currentname, setCurrentname] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -102,18 +103,21 @@ console.log(props.user);
   const handleDelete = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    console.log(localStorage.getItem('user'));
     if (confirm('Are you sure? This cannot be undone!')) {
       axios
         .delete(`https://imbd-movies.herokuapp.com/users/${user}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          // headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
           alert(
             `Your account has been deleted. We're sorry to see you go!`
           );
           localStorage.clear();
-          deleteUser({});
-          window.open('/', '_self');
+          // // deleteUser({});
+          // console.log(119);
+          window.location.reload(false);
         })
         .catch((e) => console.log(e));
     }
@@ -127,7 +131,7 @@ console.log(props.user);
         </Card.Header>
         <Card.Body>
           <CardGroup>
-            <Card bg="dark" border="dark" text="light">
+            {/* <Card bg="dark" border="dark" text="light">
               <span className="label headline-profile-update">
                 PROFILE DETAILS
               </span>
@@ -144,7 +148,7 @@ console.log(props.user);
                   <Form.Label>Username:</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder={currentname}
+                    placeholder={username}
                   />
                 </Form.Group>
                 <Form.Group
@@ -165,7 +169,7 @@ console.log(props.user);
                   <Form.Control type="text" placeholder={birthday} />
                 </Form.Group>
               </Form>
-            </Card>
+            </Card> */}
             <Card bg="dark" border="dark" text="light">
               <span className="label text-center headline-profile-update">
                 Update profile information
@@ -178,9 +182,10 @@ console.log(props.user);
                   <Form.Label>Username:</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder= 'Enter'
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter new username"
+                    
                     required
                   />
                   {usernameErr && <p>{usernameErr}</p>}
@@ -209,7 +214,7 @@ console.log(props.user);
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Change your email address"
+                    placeholder={currentEmail}
                     required
                   />
                   {emailErr && <p>{emailErr}</p>}
@@ -236,9 +241,6 @@ console.log(props.user);
                   Update
                 </Button>
               </Form>
-              <span className="label headline-profile-mini-cards">
-                My favorite movies
-              </span>
             </Card>
           </CardGroup>
         </Card.Body>

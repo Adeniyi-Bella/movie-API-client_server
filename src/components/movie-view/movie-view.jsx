@@ -16,6 +16,7 @@ export class MovieView extends React.Component {
         }
       )
       .then((response) => {
+        console.log(response.data);
         // Assign the result to the state
         alert('Movie succesfully added to favorites list')
       })
@@ -24,7 +25,7 @@ export class MovieView extends React.Component {
       });
   };
   render() {
-    const { movie, onBackClick, user } = this.props;
+    const { movie, onBackClick } = this.props;
     // console.log(movie);
     const name = [];
     movie.actors.forEach((element) => {
@@ -93,3 +94,4 @@ export class MovieView extends React.Component {
   }
 
 }
+

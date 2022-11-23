@@ -147,7 +147,7 @@ import PropTypes from 'prop-types';
 import { Form, Button, Card } from 'react-bootstrap';
 
 import './registration-view.scss';
-export function RegistrationView(props) {
+export function RegistrationView() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
