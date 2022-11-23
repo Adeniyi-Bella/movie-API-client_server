@@ -9,8 +9,13 @@ import {
 } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 // import Col from 'react-bootstrap/Col';
+<<<<<<< HEAD
 import MoviesList from '../movies-list/movies-list';
 import { setMovies, setUser, setFavorite } from '../../actions/actions';
+=======
+import { setMovies, setUser, setFavorite, deleteFavorite } from '../../actions/actions';
+import MoviesList from '../movies-list/movies-list';
+>>>>>>> main
 // import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
@@ -20,11 +25,30 @@ import { FavmovieView } from '../favoriteMovieView/favoriteMovieView';
 import ProfileView from '../profile-view/profile-view';
 // create a MainView class component, exporting it so that it can be used
 // by other components, modules, files
+<<<<<<< HEAD
+=======
+
+let mapStateToProps = state => {
+  console.log(state);
+  return {
+    movies: state.movies,
+    user: state.user
+  }
+}
+>>>>>>> main
 class MainView extends React.Component {
   constructor() {
     super();
     // this.state = {
+<<<<<<< HEAD
     //   user: null,
+=======
+    //   // movies: [],
+    //   // userDetails: {},
+    //   // favoriteMovies: [],
+    //   user: null,
+    //   // favMovies: []
+>>>>>>> main
     // };
   }
 
@@ -37,6 +61,10 @@ class MainView extends React.Component {
       // });
       this.getMovies(accessToken);
       this.getUser(accessToken);
+<<<<<<< HEAD
+=======
+      
+>>>>>>> main
     }
   }
 
@@ -45,6 +73,10 @@ class MainView extends React.Component {
     // this.setState({
     //   user: authData.user.Username,
     // });
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
     this.props.setUser(authData.user);
     // this.getUser(user)
     localStorage.setItem('token', authData.token);
@@ -66,12 +98,18 @@ class MainView extends React.Component {
       .then((response) => {
         // Assign the result to the state
         this.props.setMovies(response.data);
+<<<<<<< HEAD
       })
+=======
+        })
+      // })
+>>>>>>> main
       .catch(function (error) {
         console.log(error);
       });
   }
 
+<<<<<<< HEAD
   getUser(token) {
     const user = localStorage.getItem('user');
     console.log(user);
@@ -96,6 +134,12 @@ class MainView extends React.Component {
     // const single = this.props.setMovies()
     const username = user.Username;
     console.log(username);
+=======
+  render() {
+    // const { movies, user} = this.state;
+    let { movies, user } = this.props;
+    console.log(movies);
+>>>>>>> main
     // let { user } = this.state;
     return (
       <Router>
@@ -118,12 +162,21 @@ class MainView extends React.Component {
             return (
               <>
                 <NavBar user={user} />
+<<<<<<< HEAD
                 <Row xs={1} md={2}>
                   <MoviesList movies={movies} />;
                   {/* {movies.map((m) => (
                     <MovieCard key={m._id} movie={m} />
                   ))} */}
                 </Row>
+=======
+                 {/* <Row xs={1} md={2}> */}
+                  {/* {movies.map((m) => (  */}
+                  <MoviesList movies={movies}/>
+                    {/* <MovieCard key={m._id} movie={m} /> */}
+                  {/* ))} */}
+                {/* </Row> */}
+>>>>>>> main
               </>
             );
           }}
@@ -229,9 +282,21 @@ class MainView extends React.Component {
   }
 }
 
+<<<<<<< HEAD
 let mapStateToProps = (state) => {
   return { movies: state.movies, user: state.user };
 };
 
 // #8
 export default connect(mapStateToProps, { setMovies, setUser, setFavorite })(MainView);
+=======
+
+
+// let mapStateToProps = state => {
+//   return { movies: state.movies }
+// }
+
+// #8
+export default connect(mapStateToProps, { setMovies, setUser, setFavorite, deleteFavorite })(MainView);
+// export default connect(mapStateToProps, { setMovies } )(MainView);
+>>>>>>> main

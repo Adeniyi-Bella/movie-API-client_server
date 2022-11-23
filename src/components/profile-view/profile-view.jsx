@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 // import { updateUser, deleteUser } from '../../actions/actions';
 
-import './profile-view.scss';
+// import './profile-view.scss';
 export default function ProfileView(props) {
   console.log(props.user.Username);
   const [username, setUsername] = useState(props.user.Username);
