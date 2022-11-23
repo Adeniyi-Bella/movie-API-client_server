@@ -35,8 +35,8 @@ export class FavmovieView extends React.Component {
   };
   onRemoveFavorite = (movieId) => {
     const username = localStorage.getItem('user');
-    console.log(username);
-    console.log(movieId);
+    // console.log(username);
+    // console.log(movieId);
     axios
       .delete(
         `https://imbd-movies.herokuapp.com/users/${username}/movies/${movieId}`,
@@ -46,7 +46,11 @@ export class FavmovieView extends React.Component {
       )
       .then((response) => {
         // Assign the result to the state
-        window.location.reload(false);
+        // console.log(response.data);
+        this.setState({
+          FavoriteMovies: response.data.FavoriteMovies,
+        });
+        // window.location.reload(false);
       })
       .catch(function (error) {
         console.log(error);
