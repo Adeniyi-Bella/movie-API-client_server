@@ -2,7 +2,9 @@
   "name": "movie-api-client_server",
   "version": "1.0.0",
   "description": "",
- 
+  "start": "parcel src/index.html — open",
+
+"build": "parcel build dist/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild" : "parcel build src/index.html"
