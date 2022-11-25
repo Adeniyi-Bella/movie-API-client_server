@@ -1,13 +1,11 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export class MovieView extends React.Component {
   addFavorite = (movieId) => {
     const username = localStorage.getItem('user');
-    console.log(username);
-    console.log(movieId);
     axios
       .post(
         `https://imbd-movies.herokuapp.com/users/${username}/movies/${movieId}`,
@@ -16,7 +14,6 @@ export class MovieView extends React.Component {
         }
       )
       .then((response) => {
-        // Assign the result to the state
         alert('Movie succesfully added to favorites list')
       })
       .catch(function (error) {
@@ -24,16 +21,13 @@ export class MovieView extends React.Component {
       });
   };
   render() {
-    const { movie, onBackClick, user } = this.props;
-    // console.log(movie);
+    const { movie, onBackClick } = this.props;
     const name = [];
     movie.actors.forEach((element) => {
       name.push(element.name);
     });
-
-    // console.log(name);
     return (
-      <Card border="light" body style={{}}>
+      <Card border="light" body style={{padding: '20px'}}>
         <Card.Body>
           <Card.Img
             style={{ width: '18rem', margin: 'auto' }}

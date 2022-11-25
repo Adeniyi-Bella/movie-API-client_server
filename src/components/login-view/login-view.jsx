@@ -4,12 +4,10 @@ import { Link } from "react-router-dom";
 import {
   Nav,
   Navbar,
-  NavDropdown,
+  Container,
   Button
 
 } from 'react-bootstrap';
-
-import { connect } from 'react-redux';
 // import Button from 'react-bootstrap/Button';
 import './login-view.scss';
 export function LoginView(props) {
@@ -48,9 +46,7 @@ export function LoginView(props) {
     })
     
     .then(response => {
-      console.log(25);
       const data = response.data;
-      console.log(data);
       props.onLoggedIn(data);
     })
     .catch(e => {
@@ -59,36 +55,20 @@ export function LoginView(props) {
   }
   };
 
-  
   return (
     <>
-    {/* <Navbar bg="light" variant="light" expand="lg" sticky="top"> */}
-        {/* <Container> */}
-        {/* <Navbar.Brand href="#home">My-Movie APP</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">
-                Action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">
-                Something
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
+    <Navbar bg="light" variant="light" expand="lg" >
+        <Container>
+        <Navbar.Brand className="brand" href="/">Movies Night</Navbar.Brand>        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
+        <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="me-auto ml-auto">
+            <Nav.Link href="/">Log-in</Nav.Link>
+            <Nav.Link href="/register">Register</Nav.Link>
           </Nav>
-        </Navbar.Collapse> */}
-        {/* </Container> */}
-      {/* </Navbar> */}
+        </Navbar.Collapse>
+        </Container>
+      </Navbar>
 
     <div className="limiter">
       <div className="container-login100">
@@ -174,10 +154,3 @@ export function LoginView(props) {
     </>
   );
 }
-
-const mapDispatchToProps = (dispatch) => ({
-  handleSubmit: (event) =>
-    dispatch(handleSubmit(event))
-});
-
-export default connect(null, mapDispatchToProps)(LoginView);

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Row, Button, Figure, Col, Card } from 'react-bootstrap';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export class FavmovieView extends React.Component {
   constructor() {
     super();
     this.state = {
-      // movie: [],
       FavoriteMovies: [],
     };
   }
@@ -35,8 +34,6 @@ export class FavmovieView extends React.Component {
   };
   onRemoveFavorite = (movieId) => {
     const username = localStorage.getItem('user');
-    console.log(username);
-    console.log(movieId);
     axios
       .delete(
         `https://imbd-movies.herokuapp.com/users/${username}/movies/${movieId}`,
@@ -46,7 +43,9 @@ export class FavmovieView extends React.Component {
       )
       .then((response) => {
         // Assign the result to the state
-        window.location.reload(false);
+        this.setState({
+          FavoriteMovies: response.data.FavoriteMovies,
+        });
       })
       .catch(function (error) {
         console.log(error);
@@ -64,13 +63,12 @@ export class FavmovieView extends React.Component {
       }
     }
 
-    console.log(myFavoritesMovies.length);
     if (myFavoritesMovies.length===0)
     {return (<h4 style={{ paddingLeft: '30px' }}> No movies in Favorite. Go back to add Movies</h4>)}
     return (
       <>
         {myFavoritesMovies.map((movie) => (
-          <Card border="light" body style={{ width: '18rem' }}>
+          <Card  key={movie._id} border="light" body style={{ width: '18rem', marginLeft: '20px' }}>
             <Card.Body key={movie._id}>
               <>
                 <Card.Img

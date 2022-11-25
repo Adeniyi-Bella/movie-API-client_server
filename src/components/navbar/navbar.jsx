@@ -20,6 +20,7 @@ export default function NavBar({ user }) {
   };
 
   return (
+    // <Container>
     <Navbar
       className="main-nav"
       sticky="top"
@@ -27,21 +28,19 @@ export default function NavBar({ user }) {
       expand="lg"
       variant="dark"
     >
-      <Container>
-        <Navbar.Brand className="navbar-logo" as={Link} to="/">
-          Home Page
-        </Navbar.Brand>
+      
+      <Navbar.Brand className="brand" href="/">Home</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mal-auto">
+          <Nav className="mal-auto ml-auto">
             {isAuth() && (
               <Nav.Link as={Link} to={`/users/${user}`}>
-                Your Profile
+                Your profile
               </Nav.Link>
             )}
             {isAuth() && (
               <Nav.Link as={Link} to={`/users/${user}/favoriteMovies`}>
-                FAVORITE MOVIES
+                Favorite movies
               </Nav.Link>
             )}
             {isAuth() && (
@@ -56,7 +55,8 @@ export default function NavBar({ user }) {
             )}
           </Nav>
         </Navbar.Collapse>
-      </Container>
+      
     </Navbar>
+    // </Container>
   );
 }

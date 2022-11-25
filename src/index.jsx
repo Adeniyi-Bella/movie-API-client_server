@@ -1,5 +1,5 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
+import { Container} from 'react-bootstrap';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import moviesApp from './reducers/reducers';
@@ -8,15 +8,27 @@ import { createRoot } from 'react-dom/client';
 import { devToolsEnhancer } from 'redux-devtools-extension';
 // Import statement to indicate that you need to bundle `./index.scss`
 import './index.scss';
+import { library } from '@fortawesome/fontawesome-svg-core';
+// import your icons
+import { faStar as faStarFull, faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faStarHalf, faStar } from '@fortawesome/free-regular-svg-icons';
+
+library.add(
+  faStarHalf,
+  faStar,
+  faStarFull,
+  faCircleChevronLeft
+  // more icons go here
+);
 
 const store = createStore(moviesApp, devToolsEnhancer());
-// const store = createStore(moviesApp, devToolsEnhancer());
-// Main component (will eventually use all the others)
 class MyFlixApplication extends React.Component {
   render() {
     return (
       <Provider store={store}>
+        <Container>
         <MainView />
+        </Container>
       </Provider>
     );
   }
