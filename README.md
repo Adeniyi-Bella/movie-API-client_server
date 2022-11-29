@@ -1,4 +1,4 @@
-# movie-API-client_server (Still in Development)
+# movie-API-client_server 
 A front-end implementation for a movie app. The back-end implementation can be found at: https://github.com/Adeniyi-Bella/movie-API
 
 ## Users can
@@ -14,7 +14,7 @@ A front-end implementation for a movie app. The back-end implementation can be f
 - Client side app routing was used for routing to different end-points
 
 
-## Testing your project
+## Testing the project
 - Clone the github link
-- Test your project using Parcel: parcel [Path to index.html] i.e parcel src/index.html.
-- The src folder has all the components for the app.
+- Install packages with npm install followed by npm run start.
+- The app starts on local host.
