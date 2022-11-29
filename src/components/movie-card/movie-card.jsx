@@ -1,34 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+
+
+import './movie-card.scss';
+
 export class MovieCard extends React.Component {
+
+
+
+
   render() {
     const { movie } = this.props;
-    console.log(movie.image);
-
     return (
-      
-        <Card border="light" body style={{ width: '18rem' }}>
-          <Card.Body>
-            <Card.Img
-              variant="top"
-              src={movie.image}
-              crossOrigin="anonymous"
-            />
-
-            <Card.Title>{movie.Title}</Card.Title>
-            {/* <Card.Text>{movie.description}</Card.Text> */}
-            <Link to={`/movies/${movie._id}`}>
-            <Button variant='link'>
-              More Info
-            </Button>
-            </Link>
-          </Card.Body>
-        </Card>
-
-    );
-
+      <Card>
+        <Link to={`/movies/${movie._id}`}>
+          <Card.Img variant="top" src={movie.image} alt={`Poster: ${movie.Title}`} title={movie.Title} className="image-link" />
+        </Link>
+        <Card.Body>
+          <Card.Title><h1 className="card-title">{movie.Title}</h1></Card.Title>
+          <Card.Text>
+            {movie.description.slice(0, 255) + "..."}
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    )
   }
 }
 
@@ -36,7 +35,27 @@ MovieCard.propTypes = {
   movie: PropTypes.shape({
     Title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    // image: PropTypes.string.isRequired,
-  }).isRequired,
-  // onMovieClick: PropTypes.func.isRequired,
+    image: PropTypes.string.isRequired,
+    release_year: PropTypes.number.isRequired,
+    // director_names: PropTypes.shape({
+    //   Name: PropTypes.string.isRequired,
+    //   Bio: PropTypes.string,
+    //   Birth: PropTypes.number,
+    //   Death: PropTypes.number
+    // }),
+    // Genre: PropTypes.shape({
+    //   Name: PropTypes.string.isRequired,
+    //   Description: PropTypes.string
+    // }),
+  }).isRequired
 };
+
+
+const mapStateToProps = (state) => {
+  return {
+    movies: state.movies,
+    user: state.user
+  };
+};
+
+export default connect(mapStateToProps)(MovieCard);

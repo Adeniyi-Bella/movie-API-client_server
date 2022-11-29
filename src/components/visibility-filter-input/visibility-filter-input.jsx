@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import { setFilter } from '../../actions/actions';
 
 function VisibilityFilterInput(props) {
-  return <Form.Control style={{ width: '500px', marginTop: '20px' }}
+  return <Form.Control
     onChange={e => props.setFilter(e.target.value)}
     value={props.visibilityFilter}
     placeholder="Filter movies"

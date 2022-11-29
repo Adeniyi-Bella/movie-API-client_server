@@ -1,269 +1,298 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import PropTypes from 'prop-types';
-import {
-  Container,
-  Form,
-  Button,
-  Card,
-  CardGroup,
-  Col,
-} from 'react-bootstrap';
-
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import PropTypes from 'prop-types';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { setUser, updateUser } from '../../actions/actions';
 
-// import { connect } from 'react-redux';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 
-// import { updateUser, deleteUser } from '../../actions/actions';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './profile-view.scss';
-export default function ProfileView(props) {
-  const [username, setUsername] = useState(props.user.Username);
-  const [currentEmail, setnewEmail] = useState(props.user.Email);
-  const [currentname, setCurrentname] = useState('');
+
+export function ProfileView({
+  user,
+  movies,
+  handleDeleteFavorite,
+  onBackClick,
+}) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
-  // Declare hook for each input
   const [usernameErr, setUsernameErr] = useState('');
   const [passwordErr, setPasswordErr] = useState('');
   const [emailErr, setEmailErr] = useState('');
-  const [birthdayErr, setBirthdayErr] = useState('');
-  // const { user, favoriteMovies, removeFavorite, onBackClick } = props;
 
-  // const Username = localStorage.getItem('user');
-
-
-  // Validate user inputs
+  // validate input
   const validate = () => {
+    // reset to avoid wrongly displaying error after previous invalid submit
+    setUsernameErr(false);
+    setPasswordErr(false);
+    setEmailErr(false);
+
     let isReq = true;
     if (!username) {
-      setUsernameErr('Username required');
+      setUsernameErr('Username required.');
       isReq = false;
     } else if (username.length < 5) {
-      setUsernameErr('Username must be 5 or more characters');
+      setUsernameErr('Username must be at least 5 characters long.');
       isReq = false;
     }
     if (!password) {
-      setPasswordErr('Password required');
+      setPasswordErr('Password required.');
       isReq = false;
-    } else if (password.length < 6) {
-      setPasswordErr('Password must be 6 or more characters');
+    } else if (password.length < 8) {
+      setPasswordErr('Password must be at least 8 characters long.');
       isReq = false;
     }
     if (!email) {
-      setEmailErr('Email required');
+      setEmailErr('E-mail required.');
       isReq = false;
     } else if (email.indexOf('@') === -1) {
-      setEmailErr('Email must be a valid email address');
+      setEmailErr('Enter valid E-mail address.');
       isReq = false;
     }
-
     return isReq;
   };
 
+  // update user info
   const handleUpdate = (e) => {
     e.preventDefault();
     const isReq = validate();
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (isReq && token !== null && user !== null) {
+    let token = localStorage.getItem('token');
+
+    // if successfully validated ...
+    if (isReq) {
+      /* Send a request to the server to change user data (put) */
       axios
         .put(
-          `https://imbd-movies.herokuapp.com/users/${user}`,
-
+          `https://imbd-movies.herokuapp.com/users/${user.Username}`,
           {
             Username: username,
             Password: password,
             Email: email,
             Birthday: birthday,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         )
-        .then((res) => {
-          const data = res.data;
-          localStorage.setItem('user', data.Username);
-          alert(
-            'Update successful! Your changes will be visible after the next login.'
-          );
+        .then((response) => {
+          const data = response.data;
+          localStorage.setItem('user', username);
+          console.log(data);
+          window.open('/', '_self');
         })
-        .catch((e) => {
-          console.error(e);
-          alert('Unable to update user infos :(');
+        .catch((error) => {
+          console.log(error);
         });
     }
   };
 
-  const handleDelete = (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (confirm('Are you sure? This cannot be undone!')) {
-      axios
-        .delete(`https://imbd-movies.herokuapp.com/users/${user}`, {
-          // headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          alert(
-            `Your account has been deleted. We're sorry to see you go!`
-          );
-          localStorage.clear();
-          window.location.reload(false);
-        })
-        .catch((e) => console.log(e));
-    }
+  // unregister
+  const handleUnreg = () => {
+    let token = localStorage.getItem('token');
+    axios
+      .delete(
+        `https://imbd-movies.herokuapp.com/users/${user.Username}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.open('/register', '_self');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
-    <Container className="profile-container">
-      <Card bg="dark" text="light" className="profile-card">
-        <Card.Header className="text-center" as="h5">
-          Profile
-        </Card.Header>
-        <Card.Body>
-          <CardGroup>
-            {/* <Card bg="dark" border="dark" text="light">
-              <span className="label headline-profile-update">
-                PROFILE DETAILS
-              </span>
-              <Form
-                style={{
-                  width: '150px',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Form.Group
-                  className="profile-form-group-username"
-                  controlId="formGroupUsername"
-                >
-                  <Form.Label>Username:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={username}
-                  />
-                </Form.Group>
-                <Form.Group
-                  className="profile-form-group-username"
-                  controlId="formGroupUsername"
-                >
-                  <Form.Label>Email:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={currentEmail}
-                  />
-                </Form.Group>
-                <Form.Group
-                  className="profile-form-group-username"
-                  controlId="formGroupUsername"
-                >
-                  <Form.Label>Birthday:</Form.Label>
-                  <Form.Control type="text" placeholder={birthday} />
-                </Form.Group>
-              </Form>
-            </Card> */}
-            <Card bg="dark" border="dark" text="light">
-              <span className="label text-center headline-profile-update">
-                Update profile information
-              </span>
-              <Form>
-                <Form.Group
-                  className="profile-form-group-username"
-                  controlId="formGroupUsername"
-                >
-                  <Form.Label>Username:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder= 'Enter'
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    
-                    required
-                  />
-                  {usernameErr && <p>{usernameErr}</p>}
-                </Form.Group>
-                <Form.Group
-                  className="profile-form-group-password"
-                  controlId="formGroupPassword"
-                >
-                  <Form.Label>Password:</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="New password must be 6 or more characters"
-                    minLength="6"
-                    required
-                  />
-                  {passwordErr && <p>{passwordErr}</p>}
-                </Form.Group>
-                <Form.Group
-                  className="profile-form-group-email"
-                  controlId="formGroupEmail"
-                >
-                  <Form.Label>Email:</Form.Label>
-                  <Form.Control
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={currentEmail}
-                    required
-                  />
-                  {emailErr && <p>{emailErr}</p>}
-                </Form.Group>
-                <Form.Group
-                  className="profile-form-group-birthday"
-                  controlId="formGroupBirthday"
-                >
-                  <Form.Label>Date of birth:</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={birthday}
-                    onChange={(e) => setBirthday(e.target.value)}
-                    placeholder="Enter your birthday"
-                  />
-                  {birthdayErr && <p>{birthdayErr}</p>}
-                </Form.Group>
-                <Button
-                  className="button-profile-view-update"
-                  variant="secondary"
-                  type="submit"
-                  onClick={handleUpdate}
-                >
-                  Update
-                </Button>
-              </Form>
-            </Card>
-          </CardGroup>
-        </Card.Body>
-
-        <Card.Footer
-          style={{ display: 'flex', justifyContent: 'space-between' }}
+    <>
+      <Row className="mt-1 mb-2">
+        <Col xs={10} md={{ span: 6 }} lg={{ span: 4 }}>
+          <h1 className="heading d-inline mr-3">Profile</h1>
+        </Col>
+        <Col
+          xs={2}
+          md={{ span: 2, offset: 4 }}
+          lg={{ span: 2, offset: 6 }}
         >
-          <Card bg="dark" border="dark" text="light">
-            <Col>
-              <Button
-                className="button button-profile-view-delete"
-                variant="danger"
-                type="submit"
-                onClick={handleDelete}
-              >
-                DELETE ACCOUNT PERMANENTLY
-              </Button>
-            </Col>
-          </Card>
+          <Link to={`/`}>
+            <FontAwesomeIcon
+              icon={['fas', 'fa-circle-chevron-left']}
+              type="button"
+              onClick={() => {
+                onBackClick();
+              }}
+              className="icon-back float-right ml-auto"
+              size="3x"
+              title="Back to all movies"
+              alt="Back button"
+            />
+          </Link>
+        </Col>
+      </Row>
+
+      <Row md={12} className="justify-content-md-center">
+        <Col xs={12} md={8} lg={6}>
+          <Form>
+            <Form.Group controlId="formUsername">
+              <Form.Label>Username:</Form.Label>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                placeholder={user.Username}
+              />
+            </Form.Group>
+            {/* display validation error */}
+            {usernameErr && <p className="error">{usernameErr}</p>}
+            <Form.Group controlId="formPassword">
+              <Form.Label>Password:</Form.Label>
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength="8"
+                placeholder="********"
+              />
+            </Form.Group>
+            {/* display validation error */}
+            {passwordErr && <p className="error">{passwordErr}</p>}
+            <Form.Group controlId="formEmail">
+              <Form.Label>E-mail:</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder={user.Email}
+              />
+            </Form.Group>
+            {/* display validation error */}
+            {emailErr && <p className="error">{emailErr}</p>}
+            <Form.Group controlId="formBirthday">
+              <Form.Label>Date of Birth:</Form.Label>
+              <Form.Control
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={handleUpdate}
+              className="mt-4 float-right"
+            >
+              Update
+            </Button>
+          </Form>
           <Button
-            onClick={() => {
-              props.onBackClick(null);
-            }}
+            variant="secondary"
+            type="button"
+            onClick={handleUnreg}
+            className="mt-4 mr-4 float-right"
           >
-            Back To Home
+            Unregister
           </Button>
-        </Card.Footer>
-      </Card>
-    </Container>
+        </Col>
+      </Row>
+
+      <h2 className="heading mb-4 mt-4">Favorite Movies</h2>
+
+      <Row md={{ offset: 3 }}>
+        {user.FavoriteMovies &&
+          movies
+            .filter((m) => user.FavoriteMovies.includes(m._id))
+            .map((movie) => (
+              <Col
+                xs={12}
+                md={3}
+                className="main-grid-item mb-3"
+                key={movie._id}
+              >
+                <Card className="w-100">
+                  <Link to={`/movies/${movie._id}`}>
+                    <Card.Img
+                      variant="top"
+                      src={movie.image}
+                      alt={`Poster: ${movie.Title}`}
+                      title={movie.Title}
+                      className="image-link"
+                    />
+                  </Link>
+                  <Card.Body className="cardbody d-flex">
+                    <Card.Title>
+                      <h3 className="heading card-title">
+                        {movie.Title}
+                      </h3>
+                    </Card.Title>
+
+                    <div className="align-self-end ml-auto">
+                      <FontAwesomeIcon
+                        icon={['fas', 'fa-star']}
+                        type="button"
+                        className="icon-star m-n2"
+                        onClick={() =>
+                          handleDeleteFavorite(movie._id)
+                        }
+                        title="Remove from favorites"
+                        alt="Remove from favorites"
+                        size={'2x'}
+                      />
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+        {!(user.FavoriteMovies.length > 0) && (
+          <Col>
+            <p>
+              You have not added any movies to your list of favorites
+              yet. Click the star next to a movie's title to add it to
+              your list of favorites.
+            </p>
+          </Col>
+        )}
+      </Row>
+    </>
   );
 }
+
+ProfileView.propTypes = {
+  username: PropTypes.string,
+  password: PropTypes.string,
+  email: PropTypes.string,
+  birthday: PropTypes.number,
+};
+
+// const mapStateToProps = (state) => {
+//   return {
+//     movies: state.movies,
+//     user: state.user,
+//   };
+// };
+
+// is this necessary / correct?
+// const mapDispatchToProps = (dispatch) => ({
+//   handleUpdate: (event) => dispatch(updateUser(event)),
+//   handleUnreg: (event) => dispatch(deleteUser(event)),
+//   handleDeleteFavorite: (event) => dispatch(deleteFavorite(event)),
+// });
+
+// export default connect(mapStateToProps, mapDispatchToProps, { setUser, updateUser })(ProfileView);
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(ProfileView);

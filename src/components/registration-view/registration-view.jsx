@@ -1,142 +1,144 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
-import { Form, Button, Card } from 'react-bootstrap';
+import axios from 'axios';
 
 import './registration-view.scss';
-export function RegistrationView() {
+
+export function RegistrationView(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
-  // Declare hook for each input
   const [usernameErr, setUsernameErr] = useState('');
   const [passwordErr, setPasswordErr] = useState('');
   const [emailErr, setEmailErr] = useState('');
-  const [birthdayErr, setBirthdayErr] = useState('');
 
-  // Validate user inputs
+  // validate input
   const validate = () => {
+    // reset to avoid wrongly displaying error after previous invalid submit
+    setUsernameErr(false);
+    setPasswordErr(false);
+    setEmailErr(false);
+
     let isReq = true;
     if (!username) {
-      setUsernameErr('Username required');
+      setUsernameErr('Username required.');
       isReq = false;
     } else if (username.length < 5) {
-      setUsernameErr('Username must be 5 or more characters');
+      setUsernameErr('Username must be at least 5 characters long.');
       isReq = false;
     }
     if (!password) {
-      setPasswordErr('Password required');
+      setPasswordErr('Password required.');
       isReq = false;
-    } else if (password.length < 6) {
-      setPasswordErr('Password must be 6 or more characters');
+    } else if (password.length < 8) {
+      setPasswordErr('Password must be at least 8 characters long.');
       isReq = false;
     }
     if (!email) {
-      setEmailErr('Email required');
+      setEmailErr('E-mail required.');
       isReq = false;
     } else if (email.indexOf('@') === -1) {
-      setEmailErr('Email must be a valid email address');
+      setEmailErr('Enter valid E-mail address.');
       isReq = false;
     }
-
     return isReq;
   };
 
-  const handleSubmit = (e) => {
+  // submit
+  const handleRegister = (e) => {
     e.preventDefault();
     const isReq = validate();
+
+    // if successfully validated ...
     if (isReq) {
-      axios.post('https://imbd-movies.herokuapp.com/users', {
+      /* Send a request to the server for registration (post) */
+      axios
+        .post('https://imbd-movies.herokuapp.com/users', {
           Username: username,
           Password: password,
-          Email: email
-        
+          Email: email,
+          Birthday: birthday,
         })
-        .then((res) => {
-          const data = res.data;
-          alert('Registration successful! Please login.');
+        .then((response) => {
+          const data = response.data;
+          console.log(data);
           window.open('/', '_self');
         })
-        .catch((e) => {
-          console.error(e);
-          alert('Unable to register :(');
+        .catch((error) => {
+          console.log(error);
         });
     }
   };
 
   return (
-    <Card bg="dark" text="light" className="registration-card">
-      <Card.Header className="text-center" as="h5">
-        Register
-      </Card.Header>
-      <Card.Body>
-        <Form>
-          <Form.Group
-            className="registration-form-group-username"
-            controlId="formGroupUsername"
-          >
-            <Form.Label>Username:</Form.Label>
-            <Form.Control
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              required
-            />
-            {usernameErr && <p>{usernameErr}</p>}
-          </Form.Group>
-          <Form.Group
-            className="registration-form-group-password"
-            controlId="formGroupPassword"
-          >
-            <Form.Label>Password:</Form.Label>
-            <Form.Control
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password must be 6 or more characters"
-              minLength="6"
-              required
-            />
-            {passwordErr && <p>{passwordErr}</p>}
-          </Form.Group>
-          <Form.Group
-            className="registration-form-group-email"
-            controlId="formGroupEmail"
-          >
-            <Form.Label>Email:</Form.Label>
-            <Form.Control
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              required
-            />
-            {emailErr && <p>{emailErr}</p>}
-          </Form.Group>
-          <Form.Group controlId="formGroupBirthday">
-            <Form.Label>Date of birth:</Form.Label>
-            <Form.Control
-              type="date"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-              placeholder="Enter your birthday"
-            />
-            {birthdayErr && <p>{birthdayErr}</p>}
-          </Form.Group>
-          <Button
-            className="button-registration-view"
-            variant="secondary"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
-        </Form>
-      </Card.Body>
-    </Card>
+    <>
+      <h1 className="mb-4 mt-4 heading">Register</h1>
+      <Form>
+        <Form.Group controlId="formUsername">
+          <Form.Label>Username:</Form.Label>
+          <Form.Control
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            placeholder="Your username"
+          />
+        </Form.Group>
+        {/* display validation error */}
+        {usernameErr && <p className="error">{usernameErr}</p>}
+        <Form.Group controlId="formPassword">
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength="8"
+            placeholder="Your password"
+          />
+        </Form.Group>
+        {/* display validation error */}
+        {passwordErr && <p className="error">{passwordErr}</p>}
+        <Form.Group controlId="formEmail">
+          <Form.Label>E-mail:</Form.Label>
+          <Form.Control
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder="Your E-mail address"
+          />
+        </Form.Group>
+        {/* display validation error */}
+        {emailErr && <p className="error">{emailErr}</p>}
+        <Form.Group controlId="formBirthday">
+          <Form.Label>Date of Birth:</Form.Label>
+          <Form.Control
+            type="date"
+            value={birthday}
+            onChange={(e) => setBirthday(e.target.value)}
+            placeholder="Your date of birth"
+          />
+        </Form.Group>
+        <Button
+          variant="primary"
+          type="submit"
+          onClick={handleRegister}
+          className="mt-4 float-right"
+        >
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 }
 
-RegistrationView.propTypes = {};
+RegistrationView.propTypes = {
+  username: PropTypes.string,
+  password: PropTypes.string,
+  email: PropTypes.string,
+  birthday: PropTypes.number,
+};
