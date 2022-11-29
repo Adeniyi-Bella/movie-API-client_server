@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { connect } from 'react-redux';
-import { setUser, updateUser } from '../../actions/actions';
+// import { connect } from 'react-redux';
+// import { setUser, updateUser } from '../../actions/actions';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
