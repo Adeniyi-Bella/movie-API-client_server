@@ -1,4 +1,4 @@
-# movie-API-client_server 
+# movie-APP Front-end
 A front-end implementation for a movie app. The back-end implementation can be found at: https://github.com/Adeniyi-Bella/movie-API
 
 ## Users can
