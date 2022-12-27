@@ -1,4 +1,4 @@
-# movie-APP Front-end
+# movie-APP Front-end with React
 A front-end implementation for a movie app. The back-end implementation can be found at: https://github.com/Adeniyi-Bella/movie-API
 
 ## Users can
