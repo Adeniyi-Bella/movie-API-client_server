@@ -30,6 +30,10 @@ export function RegistrationView(props) {
       setUsernameErr('Username must be at least 5 characters long.');
       isReq = false;
     }
+    else if (username.indexOf(' ') >= 0) {
+      setUsernameErr('Username not have a space.');
+      isReq = false;
+    }
     if (!password) {
       setPasswordErr('Password required.');
       isReq = false;
