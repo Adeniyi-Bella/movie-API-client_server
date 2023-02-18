@@ -1,6 +1,7 @@
 # movie-APP Front-end with React
 A front-end implementation for a movie app using react. The back-end implementation can be found at: https://github.com/Adeniyi-Bella/movie-API.
-(here)[https://movie-api-client-server.vercel.app/]
+
+Live app: [here](https://movie-api-client-server.vercel.app/)
 
 ## Users can
 - Register
