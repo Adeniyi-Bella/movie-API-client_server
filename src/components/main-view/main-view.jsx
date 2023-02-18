@@ -26,9 +26,6 @@ import { NavBar } from '../nav-bar/nav-bar';
 import './main-view.scss';
 
 class MainView extends React.Component {
-  constructor() {
-    super();
-  }
 
   // after mount, fetch movies from API
   componentDidMount() {
@@ -124,6 +121,7 @@ class MainView extends React.Component {
 
   render() {
     const { movies, user } = this.props;
+    console.log(movies);
     const username = user.Username;
 
     return (
